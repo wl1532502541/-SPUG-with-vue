@@ -1,0 +1,136 @@
+<template>
+  <div class="main">
+    <a-form id="formLogin" class="user-layout-login" ref="formLogin">
+      <div style="margin-top: 36px;">
+        <p style="text-align: center;font-size: 24px;font-weight: bold">
+          某二手书交易平台管理信息系统:登录
+        </p>
+        <a-alert
+          type="error"
+          v-show="showError"
+          showIcon
+          style="margin-bottom: 24px;"
+          message="账户或密码错误"
+        />
+        <a-form-item>
+          <a-input
+            v-model="username"
+            size="large"
+            type="text"
+            placeholder="账户"
+          >
+            <a-icon
+              slot="prefix"
+              type="user"
+              :style="{ color: 'rgba(0,0,0,.25)' }"
+            ></a-icon>
+          </a-input>
+        </a-form-item>
+        <a-form-item>
+          <a-input
+            v-model="password"
+            type="password"
+            size="large"
+            placeholder="密码"
+          >
+            <a-icon
+              slot="prefix"
+              type="lock"
+              :style="{ color: 'rgba(0,0,0,.25)' }"
+            />
+          </a-input>
+        </a-form-item>
+      </div>
+      <a-form-item style="margin-top:24px">
+        <a-button
+          size="large"
+          type="primary"
+          htmlType="submit"
+          class="login-button"
+          @click="handleSubmit"
+          >确定</a-button
+        >
+      </a-form-item>
+      <div class="user-login-other">
+        <router-link class="register" to="/register">注册账户</router-link>
+      </div>
+    </a-form>
+  </div>
+</template>
+
+<script>
+
+
+export default {
+  name: "Login",
+  components: {
+    
+  },
+  data() {
+    return {
+      username: "",
+      password: "",
+      msg: "",
+      showError: false
+    };
+  },
+  // 页面刚加载立即执行 = mounted
+  mounted() {
+    //  判断浏览器中是否存在有效的token，若存在则切换为已登录状态
+    let token = localStorage.getItem("Authorization");
+    if (token !== "" || token != null) {
+      this.$axios("/auth/check", {
+        token: token
+      }).then(res => {
+        if (res.data.code === 200 && res.data.data === true) {
+          this.$store.commit("setIsLogin", true);
+          this.$store.commit("setToken", localStorage.getItem("token"));
+          this.routeTo("/home");
+        } else {
+          localStorage.setItem("Authorization", "");
+          this.routeTo("/login");
+        }
+      });
+    } else {
+      this.routeTo("/login");
+    }
+  },
+  methods: {
+    handleSubmit() {
+      this.$store.state.isLogin=true;
+      this.$router.push("/home")
+      /*let formData = new FormData();
+      formData.append("username", this.username);
+      formData.append("password", this.password);
+      this.$axios("/auth/login", {
+        method: "post",
+        data: formData
+      }).then(res => {
+        if (res.data.code === 200) {
+          let isAdmin = res.data.data["isAdmin"];
+          let token = res.data.data["token"];
+          let username = res.data.data["username"];
+          // 将token写入localStorage
+          localStorage.setItem("Authorization", token);
+          this.$store.commit("setIsAdmin", isAdmin);
+          this.$store.commit("setIsLogin", true);
+          this.$store.commit("setUsername", username);
+          this.$store.commit("setAuthorization", token);
+          alert("登录成功，即将跳转！");
+          this.routeTo("/home");
+        } else {
+          this.msg = res.data.data;
+          this.showError = true;
+          setTimeout(() => {
+            this.showError = false;
+            this.msg = "";
+          }, 2000);
+        }
+      });*/
+    },
+    routeTo(path) {
+      this.$router.push(path);
+    }
+  }
+};
+</script>
