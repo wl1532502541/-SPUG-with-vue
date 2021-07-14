@@ -1,60 +1,63 @@
 <template>
-  <div class="main">
-    <a-form id="formLogin" class="user-layout-login" ref="formLogin">
-      <div style="margin-top: 36px;">
-        <p style="text-align: center;font-size: 24px;font-weight: bold">
-          某二手书交易平台管理信息系统:登录
-        </p>
-        <a-alert
-          type="error"
-          v-show="showError"
-          showIcon
-          style="margin-bottom: 24px;"
-          message="账户或密码错误"
-        />
+  <div class="container">
+    <div class="titleContainer">
+      <p>
+        灵活、强大、功能全面的开源运维平台
+      </p>
+    </div>
+    <div class="formContainer">
+      <a-form id="formLogin" class="user-layout-login" ref="formLogin">
+        <div style="margin-top: 36px;">
+          <a-alert
+            type="error"
+            v-show="showError"
+            showIcon
+            style="margin-bottom: 24px;"
+            message="账户或密码错误"
+          />
+          <a-form-item>
+            <a-input
+              v-model="username"
+              size="large"
+              type="text"
+              placeholder="请输入账户"
+            >
+              <a-icon
+                slot="prefix"
+                type="user"
+                :style="{ color: 'rgba(0,0,0,.25)' }"
+              ></a-icon>
+            </a-input>
+          </a-form-item>
+          <a-form-item>
+            <a-input
+              v-model="password"
+              type="password"
+              size="large"
+              placeholder="请输入密码"
+            >
+              <a-icon
+                slot="prefix"
+                type="lock"
+                :style="{ color: 'rgba(0,0,0,.25)' }"
+              />
+            </a-input>
+          </a-form-item>
+        </div>
         <a-form-item>
-          <a-input
-            v-model="username"
+          <a-button
+            block
             size="large"
-            type="text"
-            placeholder="账户"
+            type="primary"
+            htmlType="submit"
+            class="login-button"
+            @click="handleSubmit"
+          >登陆</a-button
           >
-            <a-icon
-              slot="prefix"
-              type="user"
-              :style="{ color: 'rgba(0,0,0,.25)' }"
-            ></a-icon>
-          </a-input>
         </a-form-item>
-        <a-form-item>
-          <a-input
-            v-model="password"
-            type="password"
-            size="large"
-            placeholder="密码"
-          >
-            <a-icon
-              slot="prefix"
-              type="lock"
-              :style="{ color: 'rgba(0,0,0,.25)' }"
-            />
-          </a-input>
-        </a-form-item>
-      </div>
-      <a-form-item style="margin-top:24px">
-        <a-button
-          size="large"
-          type="primary"
-          htmlType="submit"
-          class="login-button"
-          @click="handleSubmit"
-          >确定</a-button
-        >
-      </a-form-item>
-      <div class="user-login-other">
-        <router-link class="register" to="/register">注册账户</router-link>
-      </div>
-    </a-form>
+      </a-form>
+    </div>
+
   </div>
 </template>
 
@@ -85,7 +88,7 @@ export default {
         if (res.data.code === 200 && res.data.data === true) {
           this.$store.commit("setIsLogin", true);
           this.$store.commit("setToken", localStorage.getItem("token"));
-          this.routeTo("/home");
+          this.routeTo("/welcome");
         } else {
           localStorage.setItem("Authorization", "");
           this.routeTo("/login");
@@ -98,7 +101,7 @@ export default {
   methods: {
     handleSubmit() {
       this.$store.state.isLogin=true;
-      this.$router.push("/home")
+      this.$router.push("/welcome")
       /*let formData = new FormData();
       formData.append("username", this.username);
       formData.append("password", this.password);
@@ -134,3 +137,20 @@ export default {
   }
 };
 </script>
+<style  scoped lang="scss">
+.container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  .titleContainer{
+    padding-top: 70px;
+    text-algin:center;
+    font-size: 20px;
+    font-weight: 600;
+  }
+  .formContainer{
+    width: 368px;
+  }
+}
+</style>

@@ -55,6 +55,7 @@ public abstract class BaseService<T extends BaseEntity, ID extends Serializable>
     public void deleteById(ID id) {
         repository().deleteById(id);
     }
+
 }
 
 

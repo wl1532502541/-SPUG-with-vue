@@ -126,7 +126,7 @@
 </template>
 
 <script>
-import throttle from "@/util";
+import {throttle} from "@/libs";
 
 const hcolumns = [
   {

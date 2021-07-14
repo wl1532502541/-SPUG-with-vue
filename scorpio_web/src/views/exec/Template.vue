@@ -19,10 +19,10 @@
           </a-col>
           <a-col :sm="24" :md="6">
             <a-form-item>
-            <a-button type="primary" @click="clickRefresh">
-              <a-icon type="sync"></a-icon>
-              刷新
-            </a-button></a-form-item>
+              <a-button type="primary" @click="clickRefresh">
+                <a-icon type="sync"></a-icon>刷新
+              </a-button>
+            </a-form-item>
           </a-col>
         </a-row>
       </a-form>
@@ -211,7 +211,7 @@
 </template>
 
 <script>
-import throttle from "@/util";
+import {throttle} from "@/libs";
 
 export default {
   name: "Template",

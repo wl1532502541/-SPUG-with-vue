@@ -28,4 +28,6 @@ public class Host extends BaseEntity implements Serializable {
     private String secretKey;
 
     private String remarks;
+
+    private String pKey;
 }

@@ -247,7 +247,7 @@
 </template>
 
 <script>
-import throttle from "../../util";
+import {throttle} from "../../libs";
 /*
 import Template from "@/views/exec/Template";*/
 
