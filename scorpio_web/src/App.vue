@@ -3,6 +3,9 @@
 </template>
 <script>
 export default {
+  created(){
+    console.log(1)
+  },
   computed:{
     // isLogin(){return this.$store.state.isLogin}
   },
