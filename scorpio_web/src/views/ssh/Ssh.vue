@@ -9,7 +9,8 @@
 import "xterm/css/xterm.css";
 import { Terminal } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
-import http from "../../libs/http";
+// import http from "../../libs/http";
+import {fetch} from "@/api/ssh"
 export default {
   name: "Ssh",
   // props: {
@@ -39,14 +40,19 @@ export default {
     //   console.log('close')
     // },
     _fetch() {
-      http.get(`/host/get?id=${this.id}`).then((res) => {
-        console.log("_fetch", res);
+      fetch({params:{id:this.id}}).then((res)=>{
+        console.log('_fetch 得到主机信息：',res);
         document.title = res.hostName;
-        this.host = res;
-      });
+        this.host = res
+      })
+      // http.get(`/host/get?id=${this.id}`).then((res) => {
+      //   console.log("_fetch", res);
+      //   document.title = res.hostName;
+      //   this.host = res;
+      // });
     },
     _read_as_text(data) {
-      console.log("收到信息")
+      console.log("收到信息：",data)
       const reader = new window.FileReader();
       reader.onload = () => this.term.write(reader.result);
       reader.readAsText(data, "utf-8");

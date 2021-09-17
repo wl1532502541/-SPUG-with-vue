@@ -6,7 +6,7 @@
     <div class="formContainer">
       <a-form id="formLogin" class="user-layout-login" ref="formLogin">
         <div style="margin-top: 36px">
-          <a-tabs class="tabs" default-active-key="default" @change="callback">
+          <a-tabs class="tabs" default-active-key="default" @change="(key)=>{loginType=key}">
             <a-tab-pane key="default" tab="普通登录" />
           </a-tabs>
           <a-alert type="error" v-show="showError" showIcon style="margin-bottom: 24px" message="账户或密码错误" />
@@ -39,9 +39,9 @@ export default {
       password: "",
       msg: "",
       showError: false,
+      loginType:"default",
     };
   },
-  // 页面刚加载立即执行 = mounted
   mounted() {
     //  判断浏览器中是否存在有效的token，若存在则切换为已登录状态
     let token = localStorage.getItem("Authorization");
@@ -116,7 +116,7 @@ export default {
   }
   .formContainer {
     width: 368px;
-    .tabs{
+    .tabs {
       margin-bottom: 10px;
     }
   }

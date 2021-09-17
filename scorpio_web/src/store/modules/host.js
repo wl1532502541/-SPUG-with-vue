@@ -1,45 +1,64 @@
-import http from "../../libs/http"
-export default{
-    namespaced:true,
-    state:{
-        records:[],
-        types:[],
-        record:{},
-        isFetching : false,
-        formVisible: false,
+import { delHost, fetchRecords } from "../../api/host"
+import { message } from 'ant-design-vue'
+export default {
+  namespaced: true,
+  state: {
+    records: [],
+    types: [],
+    record: {},
+    isFetching: false,
+    formVisible: false,
 
-        f_type:"",
-        f_hostName:"",
-        f_ip:""
+    f_type: "",
+    f_hostName: "",
+    f_ip: ""
+  },
+  mutations: {
+    //显示表格
+    showForm(state, info = {}) {
+      state.record = info
+      state.formVisible = true
     },
-    mutations:{
-        //显示表格
-        showForm(state,info={}){
-            state.record=info
-            state.formVisible=true
-            console.log("info",info)
-            console.log("record",state.record)
-        },
-        closeForm(state,callback){
-          state.formVisible=false
-          if(callback)callback()
-        },
-        //获取表格数据
-        fetchRecords(state) {
-            state.isFetching = true;
-            http
-              .get("/host/filter?filter=&page=0_10&sort=-createTime")
-              .then((response) => {
-                state.records = [
-                  ...response.items
-                ];
-                console.log("获取表格数据:",state.records)
-                let temp=state.records.map((item)=>item.type)
-                temp = new Set(temp)
-                state.types=Array.from(temp)
-                console.log("获取分类：",state.types)
-              })
-              .finally(() => (state.isFetching = false));
-          },
+    closeForm(state, callback) {
+      state.formVisible = false
+      if (callback) callback()
+    },
+    setRecords(state,data){
+      state.records = data
+    },
+    
+  },
+  actions: {
+    // 获取表格数据
+    _fetchRecords({commit,state}){
+      // return new Promise((resolve,reject)=>{
+      //   state.isFetching = true
+      //   fetchRecords().then((response)=>{
+      //     commit('setRecords',[...response.items])
+      //     let temp = state.records.map((item) => item.type)
+      //     temp = new Set(temp)
+      //     state.types = Array.from(temp)
+      //     resolve()
+      //   },error=>{
+      //     reject(error)
+      //   }).finally(()=>(state.isFetching = false))
+      // })
+        state.isFetching = true
+        return fetchRecords().then((response)=>{
+          commit('setRecords',[...response.items])
+          let temp = state.records.map((item) => item.type)
+          temp = new Set(temp)
+          state.types = Array.from(temp)
+        }).finally(()=>(state.isFetching = false))
+    },
+    // 删除主机
+    _delHost({dispatch},config){
+      return delHost(config).then(()=>{
+        message.success("删除成功")
+        dispatch('_fetchRecords')
+      })
+
     }
+  }
+
 }

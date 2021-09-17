@@ -39,7 +39,6 @@
             <a @click="showForm(record)">编辑</a>
             <a-divider type="vertical" />
             <a @click="handleDelete(record)">删除</a>
-            <!-- <a type="dashed" @click="handleDelete(record)">删除</a> -->
             <a-divider type="vertical" />
             <a @click="handleConsole(record)">Console</a>
             <a-divider type="vertical" />
@@ -54,14 +53,13 @@
 import SearchForm from "../../components/searchForm/SearchForm.vue";
 import SearchFormItem from "../../components/searchForm/SearchFormItem.vue";
 import Form from "./components/Form.vue";
-import { mapMutations, mapState } from "vuex";
-import http from "../../libs/http";
+import { mapActions, mapMutations, mapState } from "vuex";
 
 export default {
   name: "Host",
   components: { SearchForm, SearchFormItem, Form },
   created() {
-    this.fetchRecords();
+    this._fetchRecords();
   },
   data() {
     return {
@@ -98,10 +96,11 @@ export default {
     },
   },
   methods: {
-    ...mapMutations("host", ["showForm", "fetchRecords"]),
+    ...mapMutations("host", ["showForm"]),
+    ...mapActions("host",["_fetchRecords","_delHost"]),
     //刷新按钮
     clickRefresh: function() {
-      this.fetchRecords();
+      this._fetchRecords();
     },
     //上传确定按钮
     handleChange(info) {
@@ -118,14 +117,9 @@ export default {
     handleDelete(text) {
       this.$confirm({
         title: "删除确认",
-        content: `确定要删除【${text["hostName"]}】?`,
+        content:h => <div style="color:red;">删除不可撤回，确定要删除【{text["hostName"]}】？</div>,
         onOk: () => {
-          return http
-            .delete("/host/delete", { params: { id: text.id } })
-            .then(() => {
-              this.$message.success("删除成功");
-              this.fetchRecords();
-            });
+          this._delHost({params:{id:text.id}})
         },
       });
     },
